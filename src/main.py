@@ -1,7 +1,7 @@
 from config_loader import load_config
 from pathlib import Path
 from image_io import import_image, export_image
-from preprocessing import gaussian_smoothing
+from preprocessing import gaussian_smoothing, rescale_image
 
 # Paths - Later to be moved to config file
 
@@ -15,9 +15,16 @@ sigma = config["preprocessing"]["gaussian_sigma"]
 
 # plant-seg pipeline
 
-
+# Import
 img = import_image(input_path)
 export_image(img, output_path, "imported")
 
+# Gaussian Smoothing
 smoothened_image = gaussian_smoothing(img, sigma)
 export_image(smoothened_image, output_path, "smoothed")
+
+# Rescaling
+rescale_factor = config["preprocessing"]["rescale_factor"]
+interpolation_order = config["preprocessing"]["interpolation_order"]
+rescaled_image = rescale_image(smoothened_image, factor=tuple(rescale_factor), order=interpolation_order)
+export_image(rescaled_image, output_path, "rescaled")

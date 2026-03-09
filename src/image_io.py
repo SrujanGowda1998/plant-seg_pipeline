@@ -1,5 +1,6 @@
 from pathlib import Path
 from plantseg.tasks.io_tasks import import_image_task, export_image_task
+from plantseg.core.image import PlantSegImage
 
 
 def import_image(input_path: str):
@@ -11,20 +12,6 @@ def import_image(input_path: str):
     )
 
     return image
-
-
-# def export_image(image, output_dir: str):
-
-#     export_image_task(
-#         image=image,
-#         export_directory=Path(output_dir),
-#         export_format="tiff",
-#         data_type="uint16"
-#     )
-
-from pathlib import Path
-from plantseg.tasks.io_tasks import export_image_task
-from plantseg.core.image import PlantSegImage
 
 
 def export_image(image: PlantSegImage, export_directory: Path, stage: str):
