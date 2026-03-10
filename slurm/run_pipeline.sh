@@ -3,7 +3,7 @@
 #SBATCH --job-name=plantseg_pipeline
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:2
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=16
 #SBATCH --mem=16G
 #SBATCH --time=01:00:00
 #SBATCH --output=logs/plantseg_%j.out
