@@ -33,7 +33,7 @@ export_image(rescaled_image, output_path, "rescaled")
 
 # Predict Boundaries
 model_name = config["segmentation"]["model_name"]
-model_id  = config["segmentation"]["model_id "]
+model_id = config["segmentation"]["model_id"]
 
 boundary_map = predict_boundaries(rescaled_image, model_name, model_id )
 export_image(boundary_map, output_path, "boundary_prediction")

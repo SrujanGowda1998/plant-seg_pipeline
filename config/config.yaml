@@ -8,4 +8,4 @@ preprocessing:
 segmentation:
   # Prediction
   model_name: "confocal_3D_unet_ovules_ds2x"
-  model_id : "None"
+  model_id : None
