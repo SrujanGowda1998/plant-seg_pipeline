@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=plantseg_pipeline
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:8
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=16G
-#SBATCH --time=01:00:00
+#SBATCH --mem=64G
+#SBATCH --time=02:00:00
 #SBATCH --output=logs/plantseg_%j.out
 #SBATCH --error=logs/plantseg_%j.err
 
