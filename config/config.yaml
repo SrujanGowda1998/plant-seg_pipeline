@@ -18,7 +18,7 @@ segmentation:
   min_size: 100
   stacked: False
 
-  # Superpixels to Instance Segmentation
+  # Superpixels to Instance Segmentation ##
   mode: "mutex_ws"
   beta: 0.6
   post_min_size: 100
@@ -27,4 +27,4 @@ segmentation:
 
 postprocessing:
   # Remove Objects with Low Foreground Probability
-  foreground_threshold: 0.3
+  foreground_threshold: 0.1

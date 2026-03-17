@@ -64,5 +64,5 @@ export_image(instance_segmentation, output_path, "instance_segmentation")
 # Remove Objects with Low Foreground Probability
 foreground_threshold = config["postprocessing"]["foreground_threshold"]
 
-instance_segmentation_bg_removed = remove_bg_objects(instance_segmentation, boundary_map, foreground_threshold)
+instance_segmentation_bg_removed = remove_bg_objects(instance_segmentation, rescaled_image, foreground_threshold)
 export_image(instance_segmentation_bg_removed, output_path, "instance_segmentation_bg_removed")
