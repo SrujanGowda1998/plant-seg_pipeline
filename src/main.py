@@ -1,7 +1,7 @@
 from config_loader import load_config
 from pathlib import Path
 from image_io import import_image, export_image
-from preprocessing import gaussian_smoothing, rescale_image
+from preprocessing import gaussian_smoothing, rescale_image, filtered_boundary_map
 from segmentation import predict_boundaries, boundary_to_superpixels, superpixels_to_instance_segmentation
 from postprocessing import remove_bg_objects
 
@@ -45,6 +45,12 @@ model_id = config["segmentation"]["model_id"]
 boundary_map = predict_boundaries(rescaled_image, model_name, model_id )
 export_image(boundary_map, output_path, "boundary_prediction")
 
+# Filter out only the region of interest from the boundary map
+filter_name = config["preprocessing"]["filter_name"]
+
+filtered_boundary_map = filtered_boundary_map(boundary_map, rescaled_image, filter_name)
+export_image(region_of_interest, output_path, "boundary_prediction_filtered")
+
 ############################################################################################
 
 #### correct boundary map
@@ -55,26 +61,27 @@ export_image(boundary_map, output_path, "boundary_prediction")
 # boundary_map_corrected = boundary_map * filtered_image+
 
 
-from skimage.filters import threshold_triangle, threshold_otsu
-import numpy as np
-from plantseg.core.image import PlantSegImage
+# from skimage.filters import threshold_triangle, threshold_otsu, threshold_yen
+# import numpy as np
+# from plantseg.core.image import PlantSegImage
 
-boundary_map_filtered = boundary_map
+# boundary_map_filtered = boundary_map
 
-image_np = rescaled_image.get_data()
-boundary_np = boundary_map.get_data()
+# image_np = rescaled_image.get_data()
+# boundary_np = boundary_map.get_data()
 
 # Threshold
 # threshold_value = threshold_triangle(image_np)
-threshold_value = threshold_otsu(image_np)
+# # threshold_value = threshold_otsu(image_np)
+# threshold_value = threshold_yen(image_np)
 
-# Mask
-mask = image_np > threshold_value # Pixel wise comoarision
-mask = mask.astype(np.float32) # Required for multiplication
+# # Mask
+# mask = image_np > threshold_value # Pixel wise comoarision
+# mask = mask.astype(np.float32) # Required for multiplication
 
-boundary_filtered_np = boundary_np * mask
-boundary_map_filtered = boundary_map_filtered.derive_new(boundary_filtered_np, name=f"{boundary_map_filtered.name}_filtered")
-export_image(boundary_map_filtered, output_path, "boundary_prediction_filtered")
+# boundary_filtered_np = boundary_np * mask
+# boundary_map_filtered = boundary_map_filtered.derive_new(boundary_filtered_np, name=f"{boundary_map_filtered.name}_filtered")
+# export_image(boundary_map_filtered, output_path, "boundary_prediction_filtered")
 
 ############################################################################################
 
@@ -83,7 +90,7 @@ threshold = config["segmentation"]["threshold"]
 min_size = config["segmentation"]["min_size"]
 stacked = config["segmentation"]["stacked"]
 
-superpixels = boundary_to_superpixels(boundary_map_filtered, threshold, min_size, stacked)
+superpixels = boundary_to_superpixels(filtered_boundary_map, threshold, min_size, stacked)
 export_image(superpixels, output_path, "superpixels")
 
 # Superpixels to Instance Segmentation

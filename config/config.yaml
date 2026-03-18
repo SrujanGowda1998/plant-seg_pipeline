@@ -6,6 +6,9 @@ preprocessing:
   rescale_factor: [3.8297, 0.81, 0.81]
   interpolation_order: 1
 
+  # Filtering region of interest from boundary map
+  filter_name: "otsu"
+
 
 
 segmentation:
