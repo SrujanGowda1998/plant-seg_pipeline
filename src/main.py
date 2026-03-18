@@ -45,12 +45,45 @@ model_id = config["segmentation"]["model_id"]
 boundary_map = predict_boundaries(rescaled_image, model_name, model_id )
 export_image(boundary_map, output_path, "boundary_prediction")
 
+############################################################################################
+
+#### correct boundary map
+# threshold_function='triangle' ### parameter from config file
+# from scipy import threshold_function as mythreshold ##or whatever python package has the image thresholding functions (look for otsu, yen, ...)
+# threshold_value = mythreshold(smootehned_image[:])  ### needs to run on the npy array of the image
+# filtered_image  = smoothened_image > threshold_value  ### maybe also rescaled? not sure what size the boundary_map is
+# boundary_map_corrected = boundary_map * filtered_image+
+
+
+from skimage.filters import threshold_triangle, threshold_otsu
+import numpy as np
+from plantseg.core.image import PlantSegImage
+
+boundary_map_filtered = boundary_map
+
+image_np = rescaled_image.get_data()
+boundary_np = boundary_map.get_data()
+
+# Threshold
+# threshold_value = threshold_triangle(image_np)
+threshold_value = threshold_otsu(image_np)
+
+# Mask
+mask = image_np > threshold_value # Pixel wise comoarision
+mask = mask.astype(np.float32) # Required for multiplication
+
+boundary_filtered_np = boundary_np * mask
+boundary_map_filtered = boundary_map_filtered.derive_new(boundary_filtered_np, name=f"{boundary_map_filtered.name}_filtered")
+export_image(boundary_map_filtered, output_path, "boundary_prediction_filtered")
+
+############################################################################################
+
 # Boundaries to Superpixels
 threshold = config["segmentation"]["threshold"]
 min_size = config["segmentation"]["min_size"]
 stacked = config["segmentation"]["stacked"]
 
-superpixels = boundary_to_superpixels(boundary_map, threshold, min_size, stacked)
+superpixels = boundary_to_superpixels(boundary_map_filtered, threshold, min_size, stacked)
 export_image(superpixels, output_path, "superpixels")
 
 # Superpixels to Instance Segmentation
