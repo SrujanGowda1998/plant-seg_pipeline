@@ -20,7 +20,7 @@ Microscopy images (e.g., roundworm datasets) often contain large background regi
 - False boundary predictions in background
 To address this, the pipeline includes custom steps:
 - Foreground masking using thresholding (Triangle, Otsu, Yen)
-- Boundary correction by masking:
+- Boundary correction by masking
 
 
 # Usage
