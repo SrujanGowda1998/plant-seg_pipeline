@@ -7,7 +7,7 @@ preprocessing:
   interpolation_order: 1
 
   # Filtering region of interest from boundary map
-  filter_name: "otsu"
+  filter_name: "triangle"
 
 
 
@@ -17,7 +17,8 @@ segmentation:
   model_id : 
 
   # Boundary Prediction to Superpixels
-  threshold: 0.6
+  # threshold: 0.6 ###
+  threshold: 0.3
   min_size: 100
   stacked: False
 

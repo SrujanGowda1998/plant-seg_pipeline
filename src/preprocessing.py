@@ -1,6 +1,6 @@
 from plantseg.tasks.dataprocessing_tasks import gaussian_smoothing_task, image_rescale_to_shape_task
 from plantseg.core.image import PlantSegImage
-from skimage.filters import threshold_triangle, threshold_otsu, threshold_yen
+from skimage.filters import threshold_triangle, threshold_otsu, threshold_yen, threshold_li
 import numpy as np
 
 
@@ -45,8 +45,12 @@ def filtered_boundary_map(boundary_map, rescaled_image, filter_name):
     # Threshold
     if filter_name == "triangle":
         threshold_value = threshold_triangle(image_np)
-    else:
+    elif filter_name == "otsu":
         threshold_value = threshold_otsu(image_np)
+    elif filter_name == "li":
+        threshold_value = threshold_otsu(image_np)
+    else:
+        threshold_value = threshold_triangle(image_np)
 
     # Mask
     mask = image_np > threshold_value # Pixel wise comoarision
@@ -55,4 +59,4 @@ def filtered_boundary_map(boundary_map, rescaled_image, filter_name):
     filtered_boundary_np = boundary_np * mask
     filtered_boundary_map = filtered_boundary_map.derive_new(filtered_boundary_np, name=f"{filtered_boundary_map.name}_filtered")
 
-    return filtered_boundary_map
+    return filtered_boundary_map, mask
